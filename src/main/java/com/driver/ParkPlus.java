@@ -13,4 +13,9 @@ public class ParkPlus {
 		SpringApplication.run(ParkPlus.class, args);
 	}
 
+	/*
+
+	MODEL __-- parking lots, register, update, and delete users,
+
+	 */
 }
