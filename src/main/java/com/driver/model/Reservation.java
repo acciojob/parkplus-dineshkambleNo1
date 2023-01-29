@@ -1,7 +1,5 @@
 package com.driver.model;
 
-import org.apache.catalina.User;
-
 import javax.persistence.*;
 
 
@@ -10,15 +8,25 @@ import javax.persistence.*;
 public class Reservation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private int numberOfHours;
 
-   // User user;
-    // Spot spot
+    // User user;
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
+     // Spot spot
+     @ManyToOne
+     @JoinColumn
+     private Spot spot;
+
    // payment payment
 
+    @OneToOne(mappedBy = "reservation",cascade = CascadeType.ALL)
+    private Payment payment;
 
     public Reservation() {
     }
@@ -42,5 +50,29 @@ public class Reservation {
 
     public void setNumberOfHours(int numberOfHours) {
         this.numberOfHours = numberOfHours;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Spot getSpot() {
+        return spot;
+    }
+
+    public void setSpot(Spot spot) {
+        this.spot = spot;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

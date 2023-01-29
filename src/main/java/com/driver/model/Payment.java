@@ -9,15 +9,20 @@ import javax.persistence.*;
 public class Payment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private boolean paymentCompleted;
 
+
     @Enumerated(value = EnumType.STRING)
-    PaymentMode paymentMode;
+    private PaymentMode paymentMode;
 
     // Reservation reservations;
 
+    @OneToOne
+    @JoinColumn
+    private Reservation reservation;
 
     public Payment() {
     }
@@ -50,5 +55,13 @@ public class Payment {
 
     public void setPaymentMode(PaymentMode paymentMode) {
         this.paymentMode = paymentMode;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 }

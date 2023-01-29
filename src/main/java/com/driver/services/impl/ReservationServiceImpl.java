@@ -1,5 +1,6 @@
 package com.driver.services.impl;
 
+import com.driver.Enums.SpotType;
 import com.driver.model.*;
 import com.driver.repository.ParkingLotRepository;
 import com.driver.repository.ReservationRepository;
@@ -23,6 +24,104 @@ public class ReservationServiceImpl implements ReservationService {
     ParkingLotRepository parkingLotRepository3;
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
+        try {
+            if (!userRepository3.findById(userId).isPresent() || !parkingLotRepository3.findById(parkingLotId).isPresent()) {
+                throw new Exception("Cannot make reservation");
+            }
+
+
+            User user = userRepository3.findById(userId).get();
+            ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).get();
+
+            List<Spot> spotList = parkingLot.getSpotList();
+            boolean checkForSpots = false;
+
+            for (Spot spot : spotList) {
+                if (!spot.isOccupied()) {
+                    checkForSpots = true;
+                    break;
+                }
+            }
+
+            if (!checkForSpots) throw new Exception("Cannot make reservations");
+
+            SpotType spotType = null;
+
+            if (numberOfWheels < 2) spotType = SpotType.TWO_WHEELER;
+            else if (numberOfWheels > 2 && numberOfWheels <= 4) spotType = SpotType.FOUR_WHEELER;
+            else if (numberOfWheels > 4) spotType = SpotType.OTHERS;
+
+            // To find the minimum price
+
+            int minimumPrice = Integer.MAX_VALUE;
+
+            checkForSpots = false;
+
+            // galat ho skta h
+            Spot spotChosen = null;
+
+            for (Spot spot : spotList) {
+                if (spotType.equals(SpotType.OTHERS) && spot.getSpotType().equals(SpotType.OTHERS)) {
+                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.isOccupied()) {
+                        minimumPrice = spot.getPricePerHour() * timeInHours;
+                        checkForSpots = true;
+                        spotChosen = spot;
+                        // for extra
+                    }
+                } else if (spotType.equals(SpotType.FOUR_WHEELER) && spot.getSpotType().equals(SpotType.OTHERS) ||
+                        spot.getSpotType().equals(SpotType.FOUR_WHEELER)) {
+                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.isOccupied()) {
+                        minimumPrice = spot.getPricePerHour() * timeInHours;
+                        checkForSpots = true;
+                        spotChosen = spot;
+                    }
+                } else if (spotType.equals(SpotType.TWO_WHEELER) && spot.getSpotType().equals(SpotType.OTHERS) ||
+                        spot.getSpotType().equals(SpotType.FOUR_WHEELER) || spot.getSpotType().equals(SpotType.TWO_WHEELER)) {
+                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.isOccupied()) {
+                        minimumPrice = spot.getPricePerHour() * timeInHours;
+                        checkForSpots = true;
+                        spotChosen = spot;
+                    }
+                }
+
+            }
+
+            if (!checkForSpots) {
+                throw new Exception("Cannot make reservation");
+            }
+
+            assert spotChosen != null;
+            spotChosen.setOccupied(true);
+
+            Reservation reservation = new Reservation();
+            reservation.setNumberOfHours(timeInHours);
+            reservation.setSpot(spotChosen);
+            reservation.setUser(user);
+
+
+            spotChosen.getReservationList().add(reservation);
+            user.getReservationList().add(reservation);
+
+            userRepository3.save(user);
+            spotRepository3.save(spotChosen);
+
+
+            return reservation;
+
+
+        }
+        catch(Exception e){
+            return null;
+            //throwing an exception
+        }
 
     }
+
+
+
+
+
+
+
+
 }

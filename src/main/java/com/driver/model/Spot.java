@@ -3,6 +3,7 @@ package com.driver.model;
 import com.driver.Enums.SpotType;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "spot")
@@ -24,6 +25,9 @@ public class Spot {
     private ParkingLot parkingLot;
 
     // list of reservation kuch karna h
+
+    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL)
+    private List<Reservation> reservationList;
 
 
     public Spot() {
@@ -75,5 +79,13 @@ public class Spot {
 
     public void setParkingLot(ParkingLot parkingLot) {
         this.parkingLot = parkingLot;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 }
