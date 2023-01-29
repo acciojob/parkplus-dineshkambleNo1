@@ -1,6 +1,7 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -9,6 +10,8 @@ public class Spot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int pricePerHour;
+
+    @Enumerated(value = EnumType.STRING)
     private SpotType spotType;
     private boolean occupied;
 
@@ -25,7 +28,7 @@ public class Spot {
     }
 
     @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL)
-    private List<Reservation> reservationList;
+    private List<Reservation> reservationList = new ArrayList<>();
 
     public int getId() {
         return id;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.driver.model.SpotType.*;
 
@@ -55,18 +56,36 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public void deleteSpot(int spotId) {
+        Spot spot = spotRepository1.findById(spotId).orElse(null);
+        if (!Objects.isNull(spot)) {
+            ParkingLot parkingLot = spot.getParkingLot();
+            List<Spot> spotList= parkingLot.getSpotList();
+            for (Spot s : spotList) {
+                if(s == spot)
+                    spotRepository1.delete(s);
 
-        spotRepository1.deleteById(spotId);
+            }
+            spotRepository1.deleteById(spotId);
+        }
     }
 
     @Override
     public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour) {
-        Spot spot=spotRepository1.findById(spotId).get();
-        ParkingLot parkingLot=parkingLotRepository1.findById(parkingLotId).get();
-        spot.setParkingLot(parkingLot);
-        spot.setPricePerHour(pricePerHour);
-        spotRepository1.save(spot);
-        return spot;
+        ParkingLot parkingLot = parkingLotRepository1.findById(parkingLotId).orElse(null);
+        if (!Objects.isNull(parkingLot)) {
+            Spot requiredSpot = null;
+            for(Spot spot : parkingLot.getSpotList()){
+                if(spot.getId() == spotId){
+                    spot.setPricePerHour(pricePerHour);
+                    requiredSpot = spot;
+                }
+            }
+
+            spotRepository1.save(requiredSpot);
+            parkingLotRepository1.save(parkingLot);
+            return requiredSpot;
+        }
+        return null;
     }
 
     @Override
