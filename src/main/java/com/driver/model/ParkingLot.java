@@ -4,27 +4,19 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "parkingLot")
 public class ParkingLot {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
-
     private String address;
 
-    // list of spots krna he
+    public ParkingLot(){}
+
     @OneToMany(mappedBy = "parkingLot",cascade = CascadeType.ALL)
     private List<Spot> spotList;
 
-
-
-    public ParkingLot() { }
-
-    public ParkingLot(int id, String name, String address) {
-        this.id = id;
+    public ParkingLot(String name, String address) {
         this.name = name;
         this.address = address;
     }

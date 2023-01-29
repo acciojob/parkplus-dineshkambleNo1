@@ -4,32 +4,33 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
-
     private String phoneNumber;
-
     private String password;
+    private int a;
 
+    public User(){
+    }
 
+    public User(String name, String phoneNumberr, String password, List<Reservation> reservationList) {
+        this.name = name;
+        this.phoneNumber = phoneNumberr;
+        this.password = password;
+        this.reservationList = reservationList;
+    }
 
-     // List of reservation  kuch krna heeeeee
-
-
-    public User() {}
-
-    public User(int id, String name, String phoneNumber, String password) {
-        this.id = id;
+    public User(String name, String phoneNumber, String password) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.password = password;
     }
+
+    @OneToMany(mappedBy ="user" ,cascade = CascadeType.ALL)
+    List<Reservation> reservationList;
 
     public int getId() {
         return id;
@@ -63,17 +64,11 @@ public class User {
         this.password = password;
     }
 
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    List<Reservation> reservationList;
-
-    public List<Reservation> getReservationList(){
+    public List<Reservation> getReservationList() {
         return reservationList;
     }
 
-    public void setReservationList(List<Reservation> reservationList){
+    public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
     }
-
-
 }

@@ -4,41 +4,28 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "spot")
 public class Spot {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-
-    @Enumerated(value = EnumType.STRING)
-    private SpotType spotType;
-
     private int pricePerHour;
-
+    private SpotType spotType;
     private boolean occupied;
 
     @ManyToOne
     @JoinColumn
     private ParkingLot parkingLot;
 
-    // list of reservation kuch karna h
+    public Spot(){}
+
+    public Spot(int pricePerHour, SpotType spotType, boolean occupied) {
+        this.pricePerHour = pricePerHour;
+        this.spotType = spotType;
+        this.occupied = occupied;
+    }
 
     @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL)
     private List<Reservation> reservationList;
-
-
-    public Spot() {
-    }
-
-    public Spot(int id, SpotType spotType, int pricePerHour, boolean occupied, ParkingLot parkingLot) {
-        this.id = id;
-        this.spotType = spotType;
-        this.pricePerHour = pricePerHour;
-        this.occupied = occupied;
-        this.parkingLot = parkingLot;
-    }
 
     public int getId() {
         return id;
@@ -48,20 +35,20 @@ public class Spot {
         this.id = id;
     }
 
-    public SpotType getSpotType() {
-        return spotType;
-    }
-
-    public void setSpotType(SpotType spotType) {
-        this.spotType = spotType;
-    }
-
     public int getPricePerHour() {
         return pricePerHour;
     }
 
     public void setPricePerHour(int pricePerHour) {
         this.pricePerHour = pricePerHour;
+    }
+
+    public SpotType getSpotType() {
+        return spotType;
+    }
+
+    public void setSpotType(SpotType spotType) {
+        this.spotType = spotType;
     }
 
     public boolean getOccupied() {

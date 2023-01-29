@@ -1,6 +1,5 @@
 package com.driver.services.impl;
 
-import com.driver.model.SpotType;
 import com.driver.model.*;
 import com.driver.repository.ParkingLotRepository;
 import com.driver.repository.ReservationRepository;
@@ -24,18 +23,18 @@ public class ReservationServiceImpl implements ReservationService {
     ParkingLotRepository parkingLotRepository3;
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
+        //reservation" exception.
         try {
-            if (!userRepository3.findById(userId).isPresent() || !parkingLotRepository3.findById(parkingLotId).isPresent()) {
-                throw new Exception("Cannot make reservation");
-            }
 
+            if (!userRepository3.findById(userId).isPresent() || !parkingLotRepository3.findById(parkingLotId).isPresent()) {
+                throw new Exception("Reservation credential error");
+            }
 
             User user = userRepository3.findById(userId).get();
             ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).get();
 
             List<Spot> spotList = parkingLot.getSpotList();
             boolean checkForSpots = false;
-
             for (Spot spot : spotList) {
                 if (!spot.getOccupied()) {
                     checkForSpots = true;
@@ -43,21 +42,22 @@ public class ReservationServiceImpl implements ReservationService {
                 }
             }
 
-            if (!checkForSpots) throw new Exception("Cannot make reservations");
+            if (!checkForSpots) {
+                throw new Exception("Reservation credential error");
+            }
+
 
             SpotType requestSpotType = null;
 
-            if (numberOfWheels < 2) requestSpotType = SpotType.TWO_WHEELER;
-            else if (numberOfWheels > 2 && numberOfWheels <= 4) requestSpotType = SpotType.FOUR_WHEELER;
-            else if (numberOfWheels > 4) requestSpotType = SpotType.OTHERS;
 
-            // To find the minimum price
+            if(numberOfWheels < 2) requestSpotType = SpotType.TWO_WHEELER;
+            else if (numberOfWheels > 2 && numberOfWheels <= 4) requestSpotType = SpotType.FOUR_WHEELER;
+            else if(numberOfWheels > 4 ) requestSpotType = SpotType.OTHERS;
 
             int minimumPrice = Integer.MAX_VALUE;
 
             checkForSpots = false;
 
-            // galat ho skta h
             Spot spotChosen = null;
 
             for (Spot spot : spotList) {
@@ -87,7 +87,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
 
             if (!checkForSpots) {
-                throw new Exception("Cannot make reservation");
+                throw new Exception("Reservation credential error");
             }
 
             assert spotChosen != null;
@@ -105,23 +105,11 @@ public class ReservationServiceImpl implements ReservationService {
             userRepository3.save(user);
             spotRepository3.save(spotChosen);
 
-
             return reservation;
-
-
         }
-        catch(Exception e){
+        catch (Exception e){
             return null;
             //throwing an exception
         }
-
     }
-
-
-
-
-
-
-
-
 }
