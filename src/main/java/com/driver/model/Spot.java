@@ -1,7 +1,5 @@
 package com.driver.model;
 
-import com.driver.Enums.SpotType;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,6 +12,7 @@ public class Spot {
     private int id;
 
 
+    @Enumerated(value = EnumType.STRING)
     private SpotType spotType;
 
     private int pricePerHour;

@@ -1,6 +1,6 @@
 package com.driver.services.impl;
 
-import com.driver.Enums.PaymentMode;
+import com.driver.model.PaymentMode;
 import com.driver.model.Payment;
 import com.driver.model.Reservation;
 import com.driver.model.Spot;

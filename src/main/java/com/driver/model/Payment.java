@@ -1,7 +1,5 @@
 package com.driver.model;
 
-import com.driver.Enums.PaymentMode;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +12,7 @@ public class Payment {
 
     private boolean paymentCompleted;
 
+    @Enumerated(value = EnumType.STRING)
      private PaymentMode paymentMode;
 
     // Reservation reservations;
