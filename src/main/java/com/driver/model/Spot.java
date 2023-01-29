@@ -14,7 +14,7 @@ public class Spot {
     private int id;
 
 
-    SpotType spotType;
+    private SpotType spotType;
 
     private int pricePerHour;
 

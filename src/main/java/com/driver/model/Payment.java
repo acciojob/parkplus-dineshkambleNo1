@@ -14,9 +14,7 @@ public class Payment {
 
     private boolean paymentCompleted;
 
-
-
-    private PaymentMode paymentMode;
+     private PaymentMode paymentMode;
 
     // Reservation reservations;
 
