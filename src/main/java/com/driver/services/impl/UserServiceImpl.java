@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updatePassword(Integer userId, String password) {
-        User user=userRepository4.findById(userId).get();
+        User user = userRepository4.findById(userId).get();
         user.setPassword(password);
         userRepository4.save(user);
         return user;
@@ -28,8 +28,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(String name, String phoneNumber, String password) {
-        User user=new User(name,phoneNumber,password);
+        User user = new User();
+        user.setPassword(password);
+        user.setName(name);
+        user.setPhoneNumber(phoneNumber);
         userRepository4.save(user);
     }
-
 }
